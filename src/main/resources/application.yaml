@@ -1,0 +1,14 @@
+app:
+  jwt:
+    token:
+      prefix: "Bearer "
+      headerName: "Authorization"
+  external:
+    schedule:
+      address: "http://${SCHEDULE_URL}/schedule"
+    user:
+      address: "http://${USER_URL}"
+    avatar:
+      address: "http://${AVATAR_URL}"
+server:
+  port: ${SERVER_PORT}
