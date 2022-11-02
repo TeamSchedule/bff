@@ -1,4 +1,4 @@
-FROM dependency-cache:latest as build
+FROM evrik/teamschedule_gradle_dependency_cache:1.0 as build
 WORKDIR /app
 COPY ./ ./
 RUN gradle clean build --no-daemon -i --stacktrace -x test
