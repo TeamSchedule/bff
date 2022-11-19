@@ -9,6 +9,6 @@ app:
     user:
       address: "http://${USER_URL}"
     avatar:
-      address: "http://${AVATAR_URL}"
+      address: "http://${AVATAR_URL}/avatar"
 server:
   port: ${SERVER_PORT}
