@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate
 
 @Configuration
 class ClientConfig {
-    @Value("\${app.external.schedule.address}")
+    @Value("\${app.external.avatar.address}")
     lateinit var avatarBaseUrl: String
 
     @Value("\${app.external.schedule.address}")
