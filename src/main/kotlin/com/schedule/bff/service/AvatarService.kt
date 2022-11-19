@@ -9,17 +9,18 @@ import org.springframework.web.client.getForEntity
 import org.springframework.web.util.UriComponentsBuilder
 
 interface IAvatarService {
-    fun getAvatarsByIds(id: List<Long>): List<Avatar>
+    fun getAvatarsByIds(ids: List<Long>): List<Avatar>
 }
 
 @Service
 class AvatarService(
     @Qualifier("avatarRestTemplate") private val avatarRestTemplate: RestTemplate
 ) : IAvatarService {
-    override fun getAvatarsByIds(id: List<Long>): List<Avatar> {
+    override fun getAvatarsByIds(ids: List<Long>): List<Avatar> {
         val uri = UriComponentsBuilder
-            .fromHttpUrl("/list")
-            .queryParam("usersIds", id.joinToString(","))
+            .newInstance()
+            .path("/list")
+            .queryParam("usersIds", ids.joinToString(","))
             .build()
             .encode()
             .toUri()
