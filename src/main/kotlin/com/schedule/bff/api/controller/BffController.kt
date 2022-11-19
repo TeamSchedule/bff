@@ -1,8 +1,8 @@
 package com.schedule.bff.api.controller
 
 import com.schedule.bff.api.model.GetTeamResponse
-import com.schedule.bff.model.User
-import com.schedule.bff.model.UserWithAvatar
+import com.schedule.bff.api.model.UserWithAvatar
+import com.schedule.bff.client.model.User
 import com.schedule.bff.service.AvatarService
 import com.schedule.bff.service.IScheduleService
 import com.schedule.bff.service.IUserService
@@ -22,13 +22,14 @@ class BffController(
     val extractTokenService: ExtractTokenService,
     val avatarService: AvatarService
 ) {
-    @GetMapping("/team/{id}")
+    @GetMapping("/team/{teamId}")
     fun getTeamById(
-        @PathVariable id: Long,
+        @PathVariable teamId: Long,
         request: HttpServletRequest
     ): ResponseEntity<GetTeamResponse> {
         val token = extractTokenService.extract(request)
-        val team = scheduleService.getTeamById(id, token)
+        val team = scheduleService.getTeamById(teamId, token)
+        val teamAvatar = avatarService.getTeamAvatarByTeamId(teamId)
         val members = userService.getUsersListByIds(team.membersIds)
         val avatars = avatarService.getAvatarsByIds(team.membersIds)
         val usersWithAvatars = avatars.map { a -> userWithAvatar(members.find { u -> u.id == a.userId }!!, a.srcPath) }
@@ -39,7 +40,8 @@ class BffController(
                 team.creationDate,
                 team.adminId,
                 usersWithAvatars,
-                team.color
+                team.color,
+                teamAvatar.srcPath
             )
         )
     }
@@ -53,6 +55,6 @@ class BffController(
             user.confirmed,
             user.description,
             avatar
-        );
+        )
     }
 }

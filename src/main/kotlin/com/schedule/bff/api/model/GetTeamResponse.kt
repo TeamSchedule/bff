@@ -1,6 +1,5 @@
 package com.schedule.bff.api.model
 
-import com.schedule.bff.model.UserWithAvatar
 import java.time.LocalDate
 
 data class GetTeamResponse(
@@ -9,5 +8,6 @@ data class GetTeamResponse(
     val creationDate: LocalDate,
     val adminId: Long,
     val members: List<UserWithAvatar>,
-    val color: String
+    val color: String,
+    val avatar: String
 )
