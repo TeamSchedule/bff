@@ -22,7 +22,6 @@ class AvatarService(
             .path("/list")
             .queryParam("usersIds", ids.joinToString(","))
             .build()
-            .encode()
             .toUri()
         return avatarRestTemplate
             .getForEntity<GetAvatarsByIdsResponse>(uri)
