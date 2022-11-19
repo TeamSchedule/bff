@@ -1,6 +1,6 @@
 package com.schedule.bff.service
 
-import com.schedule.bff.api.model.GetAvatarsByIdsResponse
+import com.schedule.bff.client.model.UsersAvatarsDto
 import com.schedule.bff.client.model.TeamAvatar
 import com.schedule.bff.client.model.UserAvatar
 import org.springframework.beans.factory.annotation.Qualifier
@@ -19,11 +19,11 @@ class AvatarService(
 ) : IAvatarService {
     override fun getAvatarsByIds(ids: List<Long>): List<UserAvatar> {
         return avatarRestTemplate
-            .getForEntity<GetAvatarsByIdsResponse>(
+            .getForEntity<UsersAvatarsDto>(
                 "/list?usersIds={usersIds}", mapOf("usersIds" to ids.joinToString(","))
             )
             .body!!
-            .userAvatars
+            .avatars
     }
 
     override fun getTeamAvatarByTeamId(id: Long): TeamAvatar {
