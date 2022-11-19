@@ -1,4 +1,4 @@
-package com.schedule.bff.model
+package com.schedule.bff.client.model
 
 data class User(
     val id: Long,

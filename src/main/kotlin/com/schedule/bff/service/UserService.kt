@@ -1,7 +1,7 @@
 package com.schedule.bff.service
 
 import com.schedule.bff.api.model.GetUsersByIdsResponse
-import com.schedule.bff.model.User
+import com.schedule.bff.client.model.User
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate

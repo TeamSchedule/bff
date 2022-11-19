@@ -1,4 +1,4 @@
-package com.schedule.bff.model
+package com.schedule.bff.api.model
 
 data class UserWithAvatar(
     val id: Long,

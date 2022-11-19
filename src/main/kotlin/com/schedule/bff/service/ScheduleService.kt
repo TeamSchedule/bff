@@ -1,7 +1,7 @@
 package com.schedule.bff.service
 
 import com.schedule.bff.api.model.GetTeamByIdResponse
-import com.schedule.bff.model.Team
+import com.schedule.bff.client.model.Team
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
