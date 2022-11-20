@@ -50,13 +50,20 @@ class ScheduleService(
     ): TeamInvite {
         val httpHeaders = HttpHeaders()
         httpHeaders.set("Authorization", token)
+        val queryParams = HashMap<String, Any>()
+        queryParams["criteria"] = getTeamInviteCriteria
+        queryParams["status"] = status
+        if (teamId.isPresent) {
+            queryParams["teamId"] = teamId.get()
+        }
+
         return scheduleRestTemplate
             .exchange(
                 "/team/invite?criteria={criteria}&status={status}&teamId={teamId}",
                 HttpMethod.GET,
                 HttpEntity<Unit>(httpHeaders),
                 TeamInvite::class.java,
-                mapOf("criteria" to getTeamInviteCriteria, "status" to status, "teamId" to teamId.or(null).get())
+                queryParams
             )
             .body!!
     }
