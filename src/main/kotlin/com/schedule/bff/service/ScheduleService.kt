@@ -48,6 +48,7 @@ class ScheduleService(
         status: TeamInviteStatus,
         teamId: Optional<Long>
     ): TeamInvite {
+        var url = "/team/invite?criteria={criteria}&status={status}"
         val httpHeaders = HttpHeaders()
         httpHeaders.set("Authorization", token)
         val queryParams = HashMap<String, Any>()
@@ -55,11 +56,12 @@ class ScheduleService(
         queryParams["status"] = status
         if (teamId.isPresent) {
             queryParams["teamId"] = teamId.get()
+            url += "&teamId={teamId}"
         }
 
         return scheduleRestTemplate
             .exchange(
-                "/team/invite?criteria={criteria}&status={status}&teamId={teamId}",
+                url,
                 HttpMethod.GET,
                 HttpEntity<Unit>(httpHeaders),
                 TeamInvite::class.java,
