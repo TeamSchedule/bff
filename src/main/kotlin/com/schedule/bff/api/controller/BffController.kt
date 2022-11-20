@@ -42,14 +42,14 @@ class BffController(
         )
     }
 
-    @GetMapping("/user/{userId}/invite")
+    @GetMapping("/team/{teamId}")
     fun getTeamById(
-        @PathVariable userId: Long,
+        @PathVariable teamId: Long,
         request: HttpServletRequest
     ): ResponseEntity<GetTeamResponse> {
         val token = extractTokenService.extract(request)
-        val team = scheduleService.getTeamById(userId, token)
-        val teamAvatar = avatarService.getTeamAvatarByTeamId(userId)
+        val team = scheduleService.getTeamById(teamId, token)
+        val teamAvatar = avatarService.getTeamAvatarByTeamId(teamId)
         val usersWithAvatars = usersWithAvatars(team.membersIds)
         return ResponseEntity.ok().body(
             GetTeamResponse(
