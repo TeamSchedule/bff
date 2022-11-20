@@ -1,5 +1,5 @@
 package com.schedule.bff.api.model
 
-enum class GetTeamInviteCriteria {
+enum class TeamInviteCriteria {
     INVITING, INVITED
 }

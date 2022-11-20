@@ -1,10 +1,11 @@
 package com.schedule.bff.service
 
 import com.schedule.bff.api.model.GetTeamByIdResponse
-import com.schedule.bff.api.model.GetTeamInviteCriteria
+import com.schedule.bff.api.model.TeamInviteCriteria
 import com.schedule.bff.api.model.TeamInviteStatus
 import com.schedule.bff.client.model.Team
 import com.schedule.bff.client.model.TeamInvite
+import com.schedule.bff.client.model.TeamInvitesDto
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -17,10 +18,10 @@ interface IScheduleService {
     fun getTeamById(id: Long, token: String): Team
     fun getTeamInvite(
         token: String,
-        getTeamInviteCriteria: GetTeamInviteCriteria,
+        teamInviteCriteria: TeamInviteCriteria,
         status: TeamInviteStatus,
         teamId: Optional<Long>
-    ): TeamInvite
+    ): List<TeamInvite>
 }
 
 @Service
@@ -44,15 +45,15 @@ class ScheduleService(
 
     override fun getTeamInvite(
         token: String,
-        getTeamInviteCriteria: GetTeamInviteCriteria,
+        teamInviteCriteria: TeamInviteCriteria,
         status: TeamInviteStatus,
         teamId: Optional<Long>
-    ): TeamInvite {
+    ): List<TeamInvite> {
         var url = "/team/invite?criteria={criteria}&status={status}"
         val httpHeaders = HttpHeaders()
         httpHeaders.set("Authorization", token)
         val queryParams = HashMap<String, Any>()
-        queryParams["criteria"] = getTeamInviteCriteria
+        queryParams["criteria"] = teamInviteCriteria
         queryParams["status"] = status
         if (teamId.isPresent) {
             queryParams["teamId"] = teamId.get()
@@ -64,10 +65,11 @@ class ScheduleService(
                 url,
                 HttpMethod.GET,
                 HttpEntity<Unit>(httpHeaders),
-                TeamInvite::class.java,
+                TeamInvitesDto::class.java,
                 queryParams
             )
             .body!!
+            .teamInvites
     }
 
 }

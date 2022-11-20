@@ -8,5 +8,5 @@ data class TeamInvite(
     val invitedId: Long,
     val date: String,
     val inviteStatus: TeamInviteStatus,
-    val teamShortDescription: TeamShortDescription
+    val team: TeamShortDescription
 )
