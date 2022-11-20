@@ -2,7 +2,7 @@ package com.schedule.bff.api.model
 
 import com.schedule.bff.client.model.TeamShortDescription
 
-data class GetTeamInviteResponse(
+data class TeamInviteWithUsers(
     val id: Long,
     val inviting: UserWithAvatar,
     val invited: UserWithAvatar,
