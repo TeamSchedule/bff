@@ -56,7 +56,7 @@ class ScheduleService(
                 HttpMethod.GET,
                 HttpEntity<Unit>(httpHeaders),
                 TeamInvite::class.java,
-                mapOf("criteria" to getTeamInviteCriteria, "status" to status, "teamId" to teamId)
+                mapOf("criteria" to getTeamInviteCriteria, "status" to status, "teamId" to teamId.or(null).get())
             )
             .body!!
     }
