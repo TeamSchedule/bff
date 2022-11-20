@@ -1,17 +1,14 @@
 package com.schedule.bff.api.controller
 
-import com.schedule.bff.api.model.GetTeamResponse
-import com.schedule.bff.api.model.UserWithAvatar
+import com.schedule.bff.api.model.*
 import com.schedule.bff.client.model.User
 import com.schedule.bff.service.AvatarService
 import com.schedule.bff.service.IScheduleService
 import com.schedule.bff.service.IUserService
 import com.schedule.bff.service.jwt.ExtractTokenService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
@@ -22,17 +19,38 @@ class BffController(
     val extractTokenService: ExtractTokenService,
     val avatarService: AvatarService
 ) {
-    @GetMapping("/team/{teamId}")
+    @GetMapping("/team/invite")
+    fun getTeamInvites(
+        @RequestParam(name = "criteria") criteria: GetTeamInviteCriteria,
+        @RequestParam(name = "status") status: TeamInviteStatus,
+        @RequestParam(name = "teamId", required = false) teamId: Optional<Long>,
+        request: HttpServletRequest
+    ): ResponseEntity<GetTeamInviteResponse> {
+        val token = extractTokenService.extract(request)
+        val teamInvite = scheduleService.getTeamInvite(token, criteria, status, teamId)
+        val users = usersWithAvatars(listOf(teamInvite.invitingId, teamInvite.invitedId))
+
+        return ResponseEntity.ok().body(
+            GetTeamInviteResponse(
+                teamInvite.id,
+                users[0],
+                users[1],
+                teamInvite.date,
+                teamInvite.inviteStatus,
+                teamInvite.teamShortDescription
+            )
+        )
+    }
+
+    @GetMapping("/user/{userId}/invite")
     fun getTeamById(
-        @PathVariable teamId: Long,
+        @PathVariable userId: Long,
         request: HttpServletRequest
     ): ResponseEntity<GetTeamResponse> {
         val token = extractTokenService.extract(request)
-        val team = scheduleService.getTeamById(teamId, token)
-        val teamAvatar = avatarService.getTeamAvatarByTeamId(teamId)
-        val members = userService.getUsersListByIds(team.membersIds)
-        val avatars = avatarService.getAvatarsByIds(team.membersIds)
-        val usersWithAvatars = avatars.map { a -> userWithAvatar(members.find { u -> u.id == a.userId }!!, a.srcPath) }
+        val team = scheduleService.getTeamById(userId, token)
+        val teamAvatar = avatarService.getTeamAvatarByTeamId(userId)
+        val usersWithAvatars = usersWithAvatars(team.membersIds)
         return ResponseEntity.ok().body(
             GetTeamResponse(
                 team.id,
@@ -45,6 +63,13 @@ class BffController(
             )
         )
     }
+
+    fun usersWithAvatars(usersIds: List<Long>): List<UserWithAvatar> {
+        val members = userService.getUsersListByIds(usersIds)
+        val avatars = avatarService.getAvatarsByIds(usersIds)
+        return avatars.map { a -> userWithAvatar(members.find { u -> u.id == a.userId }!!, a.srcPath) }
+    }
+
 
     fun userWithAvatar(user: User, avatar: String): UserWithAvatar {
         return UserWithAvatar(
