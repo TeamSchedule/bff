@@ -28,7 +28,7 @@ class BffController(
         request: HttpServletRequest
     ): ResponseEntity<GetTeamInvitesResponse> {
         val token = extractTokenService.extract(request)
-        val teamInvites = scheduleService.getTeamInvite(token, criteria, status, teamId)
+        val teamInvites = scheduleService.getTeamInvites(token, criteria, status, teamId)
             .map { teamInvite -> teamInviteWithUsers(teamInvite) }
         return ResponseEntity.ok().body(
             GetTeamInvitesResponse(teamInvites)
@@ -67,8 +67,8 @@ class BffController(
         val users = usersWithAvatars(listOf(teamInvite.invitingId, teamInvite.invitedId))
         return TeamInviteWithUsers(
             teamInvite.id,
-            users[0],
-            users[1],
+            users.first { u -> u.id == teamInvite.invitingId},
+            users.first { u -> u.id == teamInvite.invitedId },
             teamInvite.date,
             teamInvite.inviteStatus,
             teamInvite.team

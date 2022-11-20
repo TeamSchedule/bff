@@ -16,7 +16,7 @@ import java.util.*
 
 interface IScheduleService {
     fun getTeamById(id: Long, token: String): Team
-    fun getTeamInvite(
+    fun getTeamInvites(
         token: String,
         teamInviteCriteria: TeamInviteCriteria,
         status: TeamInviteStatus,
@@ -43,7 +43,7 @@ class ScheduleService(
             .team
     }
 
-    override fun getTeamInvite(
+    override fun getTeamInvites(
         token: String,
         teamInviteCriteria: TeamInviteCriteria,
         status: TeamInviteStatus,
